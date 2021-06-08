@@ -1,0 +1,36 @@
+# Maintainer: Ngô Ngọc Đức Huy <huyngo@disroot.org>
+pkgname=dictd
+pkgver=1.13.0
+pkgrel=10
+pkgdesc="Client/server software and tools for the DICT protocol (RFC 2229)"
+url="https://sourceforge.net/projects/dict/"
+arch="all"
+license="GPL-2.0-only"
+depends="gawk m4"
+makedepends="zlib-dev libmaa-dev libtool byacc flex"
+subpackages="$pkgname-doc"
+source="https://downloads.sourceforge.net/dict/dictd-$pkgver.tar.gz
+	dictd.conf
+	dict.conf
+	colorit.conf
+	dictd.initd"
+
+build() {
+	./configure --prefix=/usr --sysconfdir=/etc --sbindir=/usr/bin --build=$CBUILD --host=$CHOST
+	make
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+	install -Dm644 $srcdir/dictd.conf "$pkgdir"/etc/dictd.conf
+	install -Dm644 $srcdir/dict.conf "$pkgdir"/etc/dict.conf
+	install -Dm644 $srcdir/colorit.conf "$pkgdir"/etc/colorit.conf
+	install -Dm774 $srcdir/dictd.initd "$pkgdir"/etc/init.d/dictd
+}
+sha512sums="
+86871aaf34a182d1d7aac1a1282d4a75f2d7c112c762e92f303924c324f665dae75c51e7ca91e3cc1dde2053ad8e2d1fd50a76934a5f84ff70975aa858e26439  dictd-1.13.0.tar.gz
+8c750aa43e614de9da83fd47644b96050cb9d0678689f5b13d4ab65b10e009c260ac400deb20f35acaaef373fb5d4ad236bec6f103f93ecd1462e67aee51dbd7  dictd.conf
+22fbfd3bf8c4f88801aab848e160f46bf17757086ffe8fe7a4cdb78f983e88f6c923cac8714f78d31ab311957aa860731f663324b742febd0a5039085672aeb5  dict.conf
+5df19904f25f482b4b4c90c26279ba8e8747ecf6a0f0045e456613891bc8447f1ee150d51ab3f36a5f8f8f967a07169dbfda2a6743abb842f6ed1d3fd7f88411  colorit.conf
+b3598b8ffe3f38703abcfd9a775b98b0485cb70aeb72fb787d008d356f8a32127244e1d113580f69ba3a6aed5a24bb35807a46f6285a58179994664854e2b9d1  dictd.initd
+"
