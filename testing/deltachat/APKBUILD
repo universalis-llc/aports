@@ -1,0 +1,34 @@
+# Contributor: link2xt <link2xt@testrun.org>
+# Maintainer: link2xt <link2xt@testrun.org>
+pkgname=deltachat
+_pkgname=deltachat-core-rust
+pkgver=1.56.0
+pkgrel=0
+pkgdesc="Delta Chat core library"
+url="https://delta.chat/"
+arch="all"
+license="MPLv2"
+makedepends="rust cargo openssl-dev sqlite-dev cmake"
+subpackages="$pkgname-dev"
+source="$pkgname-$pkgver.tar.gz::https://github.com/deltachat/deltachat-core-rust/archive/$pkgver.tar.gz"
+builddir="$srcdir/$_pkgname-$pkgver"
+
+build() {
+	cmake -B build \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib
+	cmake --build build
+}
+
+check() {
+	# Disabling default "vendored" feature to use system libraries.
+	cargo test --release --locked --no-default-features 
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+}
+
+sha512sums="
+b1b095074b34dde5bcdf870f9b4fe401ff329b08af4af5cf196346af1a09acd918d6902e5dae22edee9eb69cd4ff35a0c0b03be4aa10e883f241ace49d21168e  deltachat-1.56.0.tar.gz
+"
