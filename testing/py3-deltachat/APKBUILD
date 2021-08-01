@@ -1,0 +1,27 @@
+# Contributor: link2xt <link2xt@testrun.org>
+# Maintainer: link2xt <link2xt@testrun.org>
+pkgname=py3-deltachat
+_pkgname=deltachat-core-rust
+pkgver=1.56.0
+pkgrel=0
+pkgdesc="Python bindings for Delta Chat core library"
+options="!check" # most tests are online and require IMAPClient library not packaged in Alpine yet
+url="https://py.delta.chat/"
+arch="all"
+license="MPL-2.0"
+depends="deltachat py3-cffi py3-pluggy py3-setuptools python3"
+makedepends="deltachat-dev py3-setuptools_scm python3-dev"
+source="$pkgname-$pkgver.tar.gz::https://github.com/deltachat/deltachat-core-rust/archive/$pkgver.tar.gz"
+builddir="$srcdir/$_pkgname-$pkgver/python"
+
+build() {
+	SETUPTOOLS_SCM_PRETEND_VERSION="$pkgver" python3 setup.py build
+}
+
+package() {
+	SETUPTOOLS_SCM_PRETEND_VERSION="$pkgver" python3 setup.py install --prefix=/usr --root="$pkgdir"
+}
+
+sha512sums="
+b1b095074b34dde5bcdf870f9b4fe401ff329b08af4af5cf196346af1a09acd918d6902e5dae22edee9eb69cd4ff35a0c0b03be4aa10e883f241ace49d21168e  py3-deltachat-1.56.0.tar.gz
+"
