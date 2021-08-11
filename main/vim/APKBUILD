@@ -3,7 +3,7 @@
 # Contributor: Sören Tempel <soeren+alpine@soeren-tempel.net>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=vim
-pkgver=8.2.3300
+pkgver=8.2.3325
 pkgrel=0
 pkgdesc="Improved vi-style text editor"
 url="https://www.vim.org/"
@@ -129,6 +129,6 @@ xxd() {
 }
 
 sha512sums="
-7f9b26dab372c66880401f69e9d76706e750d4179115169417be6da1b02345214b78d7c1f955d36ffe4b7c8fc2aff72a7fcc2e3499cf5d41459431d53190d586  vim-8.2.3300.tar.gz
+81154e07ac2d89ab5613a57326577906dd8f8668e337ec571aeba16ba67152c80e1bb7357ac63b1e9247fda29b381bb0e1eac4d2cc890b70e4b1011846224a63  vim-8.2.3325.tar.gz
 d9586b777881973cb5e48e18750336a522ed72c3127b2d6b6991e2b943468ca5b694476e7fa39ab469178c1375fc8f52627484e0fe377aea5811a513e35a7b02  vimrc
 "
