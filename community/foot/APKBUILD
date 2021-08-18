@@ -1,11 +1,12 @@
 # Maintainer: Alex McGrath <amk@amk.ie>
 pkgname=foot
 pkgver=1.8.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A fast, lightweight and minimalistic Wayland terminal emulator"
 url="https://codeberg.org/dnkl/foot.git"
 arch="all !ppc64le" # ppc64le build fails
 license="MIT"
+depends="ncurses-terminfo-base"
 makedepends="
 	meson
 	scdoc
@@ -40,6 +41,8 @@ package() {
 	DESTDIR="$pkgdir" meson install --no-rebuild -C output
 	install -Dm644 foot.ini "$pkgdir"/usr/share/foot/foot.ini
 	mv "$pkgdir"/usr/share/fish/vendor_completions.d "$pkgdir"/usr/share/fish/completions
+	rm "$pkgdir"/usr/share/terminfo/f/foot
+	rm "$pkgdir"/usr/share/terminfo/f/foot-direct
 }
 
 sha512sums="
