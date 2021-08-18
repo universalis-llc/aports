@@ -2,7 +2,7 @@
 pkgname=ncurses
 pkgver=6.2_p20210814
 _ver=${pkgver/_p/-}
-pkgrel=0
+pkgrel=1
 pkgdesc="Console display library"
 url="https://invisible-island.net/ncurses/"
 arch="all"
@@ -50,7 +50,7 @@ package() {
 			alacritty tmux tmux-256color terminator 'terminology*' \
 			vte vte-256color gnome gnome-256color kitty konsole konsole-256color \
 			konsole-linux putty putty-256color rxvt-256color 'st-*' \
-			screen-256color; do
+			screen-256color foot foot-direct; do
 		local termfiles=$(find "$pkgdir"/usr/share/terminfo/ -name "$i" 2>/dev/null) || true
 
 		[ -z "$termfiles" ] && continue
