@@ -1,0 +1,8 @@
+#!/bin/sh
+
+addgroup -S tlsrouter 2>/dev/null
+adduser -S -D -h /var/lib/tlsrouter -s /sbin/nologin -G tlsrouter -g tlsrouter tlsrouter 2>/dev/null
+mkdir -p /etc/tlsrouter 2>/dev/null
+chown tlsrouter:tlsrouter /etc/tlsrouter 2>/dev/null
+
+exit 0
