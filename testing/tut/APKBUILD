@@ -1,7 +1,7 @@
 # Contributor: Alexey Yerin <yyp@disroot.org>
 # Maintainer: Alexey Yerin <yyp@disroot.org>
 pkgname=tut
-pkgver=0.0.31
+pkgver=0.0.32
 pkgrel=1
 pkgdesc="TUI for Mastodon"
 url="https://github.com/RasmusLindroth/tut"
@@ -25,5 +25,5 @@ package() {
 }
 
 sha512sums="
-e9478813f5091bce2578176ba04f48473cb990110ecaf307b3f7b99d1c1fa27fb5e551bd745a7a03361702e23bbd22eec180458864ab47322435a983451570cf  tut-0.0.31.tar.gz
+fcb3b8c85ec26161046219fe97b189c9f5b66028188f5d304124f246eee1727f19dddc699d0d6ff81445d8948026b1b256298751589f440e20770812cf6944ae  tut-0.0.32.tar.gz
 "
