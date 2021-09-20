@@ -1,0 +1,36 @@
+# Contributor: Sol Fisher Romanoff <sol@solfisher.com>
+# Maintainer: Sol Fisher Romanoff <sol@solfisher.com>
+pkgname=twolame
+pkgver=0.4.0
+pkgrel=0
+pkgdesc="MPEG Audio Layer 2 (MP2) encoder"
+url="https://twolame.org"
+arch="all"
+license="LGPL-2.1"
+makedepends="autoconf automake libtool libsndfile-dev"
+subpackages="$pkgname-dev $pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/njh/twolame/archive/refs/tags/$pkgver.tar.gz"
+
+prepare() {
+	default_prepare
+	autoreconf -vfi
+}
+
+build() {
+	./configure \
+		--prefix=/usr \
+		--disable-static
+	make
+}
+
+check() {
+	make check
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+9a0d3ef430ca93b561caa7e56fe60c126135b1c36294a280fa21699402b3922a3992035f3d421f3bbe131cdc04459cc907059dfe0c2f512427f305fe3936e54d  twolame-0.4.0.tar.gz
+"
