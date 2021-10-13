@@ -27,6 +27,7 @@ replaces="libstdc++ binutils"
 : "${LANG_GO:=true}"
 : "${LANG_FORTRAN:=true}"
 : "${LANG_ADA:=true}"
+: "${LANG_JIT:=true}"
 
 _libgomp=true
 _libgcc=true
@@ -46,6 +47,7 @@ if [ "$CHOST" != "$CTARGET" ]; then
 	LANG_GO=false
 	LANG_FORTRAN=false
 	LANG_D=false
+	LANG_JIT=false
 	_libgomp=false
 	_libatomic=false
 	_libitm=false
@@ -83,6 +85,7 @@ elif [ "$CBUILD" != "$CHOST" ]; then
 	LANG_GO=false
 	LANG_FORTRAN=false
 	LANG_D=false
+	LANG_JIT=false
 
 	STRIP_FOR_TARGET=${CROSS_COMPILE}strip
 	_builddir="$srcdir/build-cross-native"
@@ -162,6 +165,9 @@ if $LANG_ADA; then
 	[ "$CBUILD" = "$CTARGET" ] && makedepends_build="$makedepends_build gcc-gnat-bootstrap"
 	[ "$CBUILD" != "$CTARGET" ] && makedepends_build="$makedepends_build gcc-gnat gcc-gnat$_cross"
 fi
+if $LANG_JIT; then
+	subpackages="$subpackages libgccjit::$CTARGET_ARCH libgccjit$_target:libgccjit"
+fi
 makedepends="$makedepends_build $makedepends_host"
 
 # when using upstream releases, use this URI template
@@ -214,6 +220,7 @@ source="https://dev.alpinelinux.org/~nenolod/gcc-${pkgver}.tar.xz
 	0040-configure-Add-enable-autolink-libatomic-use-in-LINK_.patch
 	0041-Use-generic-errstr.go-implementation-on-musl.patch
 	0042-configure-fix-detection-of-atomic-builtins-in-libato.patch
+	0043-fix-poisoned-calloc-gccjit.patch
 	"
 
 # we build out-of-tree
@@ -317,6 +324,38 @@ build() {
 
 	export CFLAGS="$CFLAGS -O2"
 
+	if $LANG_JIT; then
+		mkdir -p "$_builddir"
+	    cd "$_builddir"
+		"$_gccdir"/configure --prefix=/usr \
+      		--mandir=/usr/share/man \
+			--infodir=/usr/share/info \
+			--build=${CBUILD} \
+			--host=${CHOST} \
+			--target=${CTARGET} \
+			--with-pkgversion="Alpine $pkgver" \
+			--enable-checking=release \
+			--disable-fixed-point \
+			--disable-libstdcxx-pch \
+			--disable-multilib \
+			--disable-nls \
+			--disable-werror \
+			$_symvers \
+			--enable-__cxa_atexit \
+			--enable-default-pie \
+			--enable-default-ssp \
+			--enable-cloog-backend \
+			--enable-languages=jit \
+			$_arch_configure \
+			$_libc_configure \
+			$_cross_configure \
+			$_bootstrap_configure \
+			--with-system-zlib \
+			--enable-host-shared \
+			$_hash_style_configure
+		make
+		mv "$_builddir" "$srcdir"/gccjitbuild
+	fi
 	mkdir -p "$_builddir"
 	cd "$_builddir"
 	"$_gccdir"/configure --prefix=/usr \
@@ -661,6 +700,20 @@ gnat() {
 	mv "$pkgdir"/usr/bin/*gnat* "$subpkgdir"/usr/bin/
 }
 
+libgccjit() {
+	mkdir -p "$subpkgdir"/$_gcclibdir/include
+	mkdir -p "$subpkgdir"/build
+
+	cd $srcdir/gccjitbuild
+	make -j1 DESTDIR="$subpkgdir"/build install
+
+	mv "$subpkgdir"/build/usr/include/libgccjit*.h \
+	   "$subpkgdir"/$_gcclibdir/include
+	mv "$subpkgdir"/build/usr/lib/libgccjit.so* \
+	   "$subpkgdir"/usr/lib/
+	rm -rf "$subpkgdir"/build
+}
+
 sha512sums="
 93dfd2d92cd9ff61d288df85f588907286108f9524c46bcb1c09010ed051dec18cc04ddaec2e0194fb4236ad2df3202b27eee8536c4b9818cf31504eea97dbeb  gcc-10.3.1_git20210921.tar.xz
 eb9e3b118e327dd241cb0ce453f659ddfdbcba2069d85ec5095a0125b397feac03ca340b41519bd44372ff61ed9de5159cdd7bcd060e26a8704f7437f9402f0c  0001-posix_memalign.patch
@@ -705,4 +758,5 @@ d415c887d281b24694deec41a445edf4d48add45caf8e3431c49528f2cfbf1f8a029f03af768ac02
 932900fabd81671d403e55b0c19a7a4af46d482ee6cb90463861236b14b66a3a0fdcf5f9583e2ea45a5549e2bedf95307d5f6609c9af9cf92af3e5d2ade315cd  0040-configure-Add-enable-autolink-libatomic-use-in-LINK_.patch
 03b56f4d62af44000c11c5c3dc7a83225392cfbae2a08035cafe4f915710944a04dfc6af106f9371b4fa2167e03da222b38c7b9cebd64493575431543ae3c453  0041-Use-generic-errstr.go-implementation-on-musl.patch
 2624a6c862e0804e0a1163d2d2a4e4fb563ae1f66d9ea8aea40b851c8d31c4764bb1ff6241478a9c23c019e8bd7d351d2cd9b8f746bb3debc29104130937f2b0  0042-configure-fix-detection-of-atomic-builtins-in-libato.patch
+5a15a1c7514e7d979dd4bd2b50ad6e9fa66242cb1819f2ea4dc16223236267dd549fa61b9a070daeb4328059c88d0b0d46d1081b8e308f3652fa0378ed7f8f57  0043-fix-poisoned-calloc-gccjit.patch
 "
