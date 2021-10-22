@@ -1,0 +1,27 @@
+# Contributor: Nulo <alpine@nulo.in>
+pkgname=coreboot-ectool
+pkgver=4.14
+pkgrel=0
+pkgdesc="Dumps the RAM of a laptop’s Embedded/Environmental Controller (EC)."
+url="https://www.coreboot.org"
+arch="all"
+license="GPL-2.0-only"
+depends=""
+makedepends=""
+options="!check"
+subpackages=""
+source="https://coreboot.org/releases/coreboot-$pkgver.tar.xz"
+builddir="$srcdir/coreboot-$pkgver/util/ectool/"
+
+build() {
+	make PREFIX="$pkgdir/usr" all
+}
+
+package() {
+	mkdir -p "$pkgdir/usr/sbin"
+	make PREFIX="$pkgdir/usr" install
+}
+
+sha512sums="
+14c615472dfe00682e4b0b41b6a04ed3b201395427350f7b53497152f2acc8cbef8144bad06517b413c4076422108bccab2e4732491f5e6fcc4703b14d062b19  coreboot-4.14.tar.xz
+"
