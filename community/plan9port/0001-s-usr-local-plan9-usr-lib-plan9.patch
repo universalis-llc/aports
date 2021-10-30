@@ -1,0 +1,56 @@
+From 2c7ac172145b5c831d597a636bd2cf237005684c Mon Sep 17 00:00:00 2001
+From: Humm <hummsmith42@gmail.com>
+Date: Sat, 30 Oct 2021 03:11:39 +0200
+Subject: [PATCH] s,/usr/local/plan9,/usr/lib/plan9,
+
+Since we install plan9port to /usr/lib/plan9, we need to modify the
+default plan9port root directory to that.  If we don't, we get problems
+in situations without the $PLAN9 environment variable, such as with rc
+as login shell.
+---
+ src/cmd/sam/sam.c       | 2 +-
+ src/cmd/upas/nfs/imap.c | 2 +-
+ src/lib9/get9root.c     | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/cmd/sam/sam.c b/src/cmd/sam/sam.c
+index 84e015f5..6933750f 100644
+--- a/src/cmd/sam/sam.c
++++ b/src/cmd/sam/sam.c
+@@ -154,7 +154,7 @@ rescue(void)
+ 			sprint(buf, "nameless.%d", nblank++);
+ 		root = getenv("PLAN9");
+ 		if(root == nil)
+-			root = "/usr/local/plan9";
++			root = "/usr/lib/plan9";
+ 		fprint(io, "#!/bin/sh\n%s/bin/samsave '%s' $* <<'---%s'\n", root, buf, buf);
+ 		addr.r.p1 = 0, addr.r.p2 = f->b.nc;
+ 		writeio(f);
+diff --git a/src/cmd/upas/nfs/imap.c b/src/cmd/upas/nfs/imap.c
+index 5249e2e7..5c587c26 100644
+--- a/src/cmd/upas/nfs/imap.c
++++ b/src/cmd/upas/nfs/imap.c
+@@ -825,7 +825,7 @@ imapdial(char *server, int mode)
+ 		fd[0] = dup(p[0], -1);
+ 		fd[1] = dup(p[0], -1);
+ 		fd[2] = dup(2, -1);
+-		if(threadspawnl(fd, "/usr/local/plan9/bin/rc", "rc", "-c", server, nil) < 0){
++		if(threadspawnl(fd, "/usr/lib/plan9/bin/rc", "rc", "-c", server, nil) < 0){
+ 			close(p[0]);
+ 			close(p[1]);
+ 			close(fd[0]);
+diff --git a/src/lib9/get9root.c b/src/lib9/get9root.c
+index 07e2872c..e58958a2 100644
+--- a/src/lib9/get9root.c
++++ b/src/lib9/get9root.c
+@@ -12,6 +12,6 @@ get9root(void)
+ 	if((s = getenv("PLAN9")) != 0)
+ 		return s;
+ 	/* could do better - search $PATH */
+-	s = "/usr/local/plan9";
++	s = "/usr/lib/plan9";
+ 	return s;
+ }
+-- 
+2.33.1
+
