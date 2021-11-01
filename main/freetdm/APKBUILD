@@ -1,0 +1,45 @@
+# Contributor: Francesco Colista <fcolista@alpinelinux.org>
+# Maintainer: Francesco Colista <fcolista@alpinelinux.org>
+pkgname=freetdm
+pkgver=0_git20211031
+pkgrel=0
+pkgdesc="FreeTDM Endpoint Module "
+url="https://github.com/freeswitch/freetdm"
+arch="all"
+license="BSD-3-clause"
+makedepends="libtool automake autoconf 
+freeswitch-dev gsm-dev libpri-dev libpcap-dev zlib-dev
+python3-dev"
+checkdepends="gzip"
+subpackages="$pkgname-dev"
+source="https://dev.alpinelinux.org/archive/freetdm/freetdm-$pkgver.tar.gz"
+giturl="git://github.com/freeswitch/freetdm.git"
+disturl="dev.alpinelinux.org:/archive/$pkgname/"
+
+prepare() {
+	default_prepare
+	sh bootstrap
+}
+
+build() {
+	./configure \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--with-libpri \
+		--with-modinstdir=/usr/lib/freeswitch
+	make
+}
+
+check() {
+	make check
+}
+
+package() {
+	mkdir -p "$pkgdir"/etc/freeswitch/autoload_configs
+	echo '<load module="mod_freetdm"/>' >> "$pkgdir"/etc/freeswitch/autoload_configs/modules.conf.xml
+	make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+90adfca0c7d181814cabd2e028b6805ace2e73639cbb2b24ccc314d90cf5e880d3f2d2ae7a8187aa2773fa2a272374edf03743c9a147d8fbbba7dc29264d64c7  freetdm-0_git20211031.tar.gz
+"
