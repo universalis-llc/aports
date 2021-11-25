@@ -1,0 +1,41 @@
+# Contributor: Edd Salkield <edd@salkield.uk>
+# Maintainer: Edd Salkield <edd@salkield.uk>
+pkgname=hdf4
+pkgver=4.2.15
+pkgrel=0
+pkgdesc="HDF4 is a data model, library, and file format for storing and managing data"
+url="https://www.hdfgroup.org/solutions/hdf4/"
+arch="all"
+license="custom"
+options="!check" # Upstream tests appear broken
+depends_dev="zlib-dev jpeg-dev portablexdr-dev" # Since it's linked to portablexdr-dev, is this required here?
+makedepends="$depends_dev gfortran bison flex"
+checkdepends="diffutils" # Flags not supported by busybox diff are used
+subpackages="$pkgname-dev $pkgname-doc"
+source="https://support.hdfgroup.org/ftp/HDF/releases/HDF"$pkgver"/src/hdf-"$pkgver".tar.bz2 10-musl.patch"
+builddir="$srcdir"/"hdf-$pkgver"
+
+build() {
+	# This flag required to treat Fortran argument mismatch as a warning,
+	# not an error.
+	# This got fixed in master https://github.com/HDFGroup/hdf4/issues/1
+	# but isn't fixed yet in the latest release.
+	export FFLAGS="$FFLAGS -fallow-argument-mismatch"
+	export LIBS="$LIBS -lportablexdr"
+	./configure --prefix=/usr
+	make
+}
+
+check() {
+	make check
+}
+
+package() {
+	make DESTDIR="$pkgdir" install-recursive
+	install -Dm644 COPYING "$pkgdir"/usr/share/licenses/"$pkgname"/COPYING
+}
+
+sha512sums="
+7d4037800ef8950ed74f225355ef5458444bed26fc189fbbd2ce7d36009998013ac1f6ba5d4e60834acf8f6f73550357238745acc35e162679919400a48191e9  hdf-4.2.15.tar.bz2
+c373d5130ce1d01145735b6a9e3bfe242d2f26d7cddf2324152c92347e95d359ca54048760126a48bcc8b207391a323734a7407dfa5d0db96eb619766db35588  10-musl.patch
+"

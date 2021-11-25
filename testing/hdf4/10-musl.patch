@@ -1,0 +1,14 @@
++++ hdf-4.2.15/mfhdf/xdr/types.h
+@@ -55,12 +55,6 @@
+ #ifndef u_long
+ typedef unsigned long u_long;
+ #endif
+-#ifndef u_quad_t
+-typedef uint64_t      u_quad_t;
+-#endif
+-#ifndef quad_t
+-typedef int64_t       quad_t;
+-#endif
+ #ifndef caddr_t
+ typedef char *        caddr_t;
+ #endif
