@@ -1,0 +1,27 @@
+# Contributor: Siva Mahadevan <me@svmhdvn.name>
+# Maintainer: Siva Mahadevan <me@svmhdvn.name>
+pkgname=libsignal-client
+pkgver=0.11.0
+pkgrel=0
+pkgdesc="Implementation of the Signal client protocol in Rust"
+url="https://github.com/signalapp/libsignal-client"
+arch="all !mips64 !riscv64 !s390x"
+license="AGPL-3.0-only"
+depends="openssl-dev"
+makedepends="cargo"
+source="$pkgname-$pkgver.tar.gz::https://github.com/signalapp/libsignal-client/archive/v$pkgver.tar.gz"
+
+build() {
+	cargo build --workspace --release --locked
+}
+
+check() {
+	cargo test --release --locked
+}
+
+package() {
+	install -Dm755 "target/release/libsignal_jni.so" "$pkgdir/usr/lib/libsignal_jni.so"
+}
+sha512sums="
+a2318916067d6d301e732047dbe60e69d904abf4ed0f80a88d0751b16d138ea61c0a263b98d3eb76df7c445decd7e2aa587380d3b14ef58a5ec3bad2b07092a7  libsignal-client-0.11.0.tar.gz
+"
