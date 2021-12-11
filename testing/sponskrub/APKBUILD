@@ -1,0 +1,24 @@
+# Contributor: Sebastian Hudak <sebastian@sebsite.pw>
+# Maintainer: Sebastian Hudak <sebastian@sebsite.pw>
+pkgname=sponskrub
+pkgver=3.7.2
+pkgrel=0
+_commit=959f22173bba873808b614bf1172f0ec03067824
+pkgdesc="Command line utility to strip out advertisements from downloaded YouTube videos"
+url="https://github.com/faissaloo/SponSkrub"
+arch="all"
+license="GPL-3.0-only"
+makedepends="dub ldc"
+source="$pkgname-$_commit.tar.gz::https://github.com/faissaloo/SponSkrub/archive/$_commit.tar.gz"
+builddir="$srcdir/SponSkrub-$_commit"
+options="!check" # No tests
+
+build() {
+	dub build sponskrub:sponskrub
+}
+
+package() {
+	install -Dm755 sponskrub "$pkgdir"/usr/bin/sponskrub
+}
+
+sha512sums="66bc6a140807acf275ffb442897507f7f18192799aa2448129c60c3ca821e7c9971dd85ff887041989e45caf8dac10e141d65a57207775fbc315cfdeedcfb3e3  sponskrub-959f22173bba873808b614bf1172f0ec03067824.tar.gz"
