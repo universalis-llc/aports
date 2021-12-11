@@ -1,0 +1,42 @@
+# Contributor: Edd Salkield <edd@salkield.uk>
+# Maintainer: Edd Salkield <edd@salkield.uk>
+pkgname=eww
+pkgver=0.2.0
+pkgrel=0
+pkgdesc="Window manager independent widget system"
+url="https://github.com/elkowar/eww"
+arch="x86_64 armv7 armhf aarch64 x86 ppc64le"  # limited by rust/cargo
+license="MIT"
+depends="gtk+3.0 pango gdk-pixbuf cairo glib libgcc gtk-layer-shell"
+makedepends="rustup gtk+3.0-dev pango-dev gdk-pixbuf-dev cairo-dev glib-dev gtk-layer-shell-dev"
+options="net"
+source="$pkgname-$pkgver.tar.gz::https://github.com/elkowar/$pkgname/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir/$pkgname-$pkgver"
+
+build() {
+	# eww depends on features currently in rust nightly
+	local nightlydir=$(mktemp -p $builddir -d)
+	export CARGO_HOME="$nightlydir/cargo"
+	export RUSTUP_HOME="$nightlydir/rustup"
+	export RUSTFLAGS="-C target-feature=-crt-static"
+
+	rustup-init -y --no-modify-path --no-update-default-toolchain --default-toolchain nightly
+	source "$CARGO_HOME"/env
+	cargo build --locked --release --no-default-features --features=wayland
+}
+
+check() {
+	cargo test --locked --release
+}
+
+package() {
+	# We would install with cargo install like so...
+	# cargo install --locked --path --all . --root="$pkgdir"/usr
+	# However, Cargo.toml is a virtual manifest, and installing those
+	# is currently not supported: https://github.com/rust-lang/cargo/issues/4101
+	install -Dm755 ./target/release/eww "$pkgdir"/usr/bin/eww
+}
+
+sha512sums="
+255af012260c2f6568f33729b072570ac2edf416a2c5e0014c5911829a240e523969dee5685f609aafbf21fd67a58eb871b1f5aacead32805fd856c8b71858a4  eww-0.2.0.tar.gz
+"
