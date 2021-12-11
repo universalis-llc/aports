@@ -12,6 +12,7 @@ subpackages="$pkgname-doc
 	$pkgname-bash-completion
 	$pkgname-fish-completion
 	$pkgname-zsh-completion"
+options="net"
 source="$pkgname-$pkgver.tar.gz::https://github.com/ogham/exa/archive/v$pkgver.tar.gz
 	https://github.com/ogham/exa/releases/download/v$pkgver/exa-accoutrements-v$pkgver.zip
 	fix-lockfile.patch
