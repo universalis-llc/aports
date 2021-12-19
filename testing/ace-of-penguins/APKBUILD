@@ -1,0 +1,39 @@
+# Contributor: Sebastian Hudak <sebastian@sebsite.pw>
+# Maintainer: Sebastian Hudak <sebastian@sebsite.pw>
+pkgname=ace-of-penguins
+pkgver=1.4
+pkgrel=0
+pkgdesc="Collection of one-player games for X"
+url="https://www.delorie.com/store/ace/"
+arch="all"
+license="GPL-2.0-or-later"
+depends="libpng libx11 libxpm zlib"
+makedepends="libpng-dev libx11-dev libxpm-dev make zlib-dev"
+subpackages="$pkgname-doc"
+source="https://www.delorie.com/store/ace/ace-$pkgver.tar.gz
+	ace.patch"
+builddir="$srcdir/ace-$pkgver"
+
+prepare() {
+	default_prepare
+}
+
+build() {
+	./configure --prefix=/usr
+	make
+}
+
+check() {
+	make check
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+	mkdir -p "$pkgdir"/usr/share/doc/ace-of-penguins/
+	install -Dm644 docs/*.* "$pkgdir"/usr/share/doc/ace-of-penguins/
+}
+
+sha512sums="
+cd382db95dc17d75a76809c7f1e096e14f5863c1166aa5db7f93204ce949a9ed21979212946b9d3a09667f4a93b30f4cc44a220940f9b5dd8996f28ecb4a6dcc  ace-1.4.tar.gz
+c92e99947a625de54f1187ade75565d523a60d3f24e3753bc39ab81caf9ed4ad92a84af233407a686843734ed65aa9122257188e7cdc7c8ab154891a067f5865  ace.patch
+"
