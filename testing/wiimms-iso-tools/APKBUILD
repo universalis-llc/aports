@@ -1,0 +1,33 @@
+# Contributor: Sebastian Hudak <sebastian@sebsite.pw>
+# Maintainer: Sebastian Hudak <sebastian@sebsite.pw>
+pkgname=wiimms-iso-tools
+pkgver=3.04a
+pkgrel=0
+pkgdesc="Set of command-line tools to work with Wii/GameCube ISO and WBFS files"
+# releases aren't tagged; this commit matches version 3.04a
+_commit=e58ce7463bc8829c46bcba52e8232f550e49c17c
+url="https://wit.wiimm.de/"
+arch="x86 x86_64"
+license="GPL-2.0-or-later"
+depends="ncurses openssl zlib"
+makedepends="bash binutils gcc linux-headers make ncurses-dev openssl-dev zlib-dev"
+subpackages="$pkgname-doc"
+source="$pkgname-$_commit.tar.gz::https://github.com/Wiimm/wiimms-iso-tools/archive/$_commit.tar.gz
+	$pkgname.patch"
+builddir="$srcdir/$pkgname-$_commit"
+options="!check" # No tests
+
+build() {
+	make -C project INSTALL_PATH="$pkgdir/usr" all doc
+}
+
+package() {
+	make -C project INSTALL_PATH="$pkgdir/usr" install
+	mkdir -p "$pkgdir"/usr/share/doc/wit/
+	install -m644 project/doc/*.txt "$pkgdir"/usr/share/doc/wit/
+}
+
+sha512sums="
+b750964dafd54a04b8c32849499e4af3a2c996aaa3c41e06766bdee1210bbe273aa4eaad0e75ff9142a93d36e3042f84e57a602ba6bd610e734f864f7504a842  wiimms-iso-tools-e58ce7463bc8829c46bcba52e8232f550e49c17c.tar.gz
+a2f33899537398371152970862dc4250ede19f290ffeb42e944f69db94d39f455f88f5e930bf4cd93003cf3b75380ced6ee989c30f9fed7ed5d49d6ced431483  wiimms-iso-tools.patch
+"
