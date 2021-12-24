@@ -1,0 +1,33 @@
+# Contributor: Sebastian Hudak <sebastian@sebsite.pw>
+# Maintainer: Sebastian Hudak <sebastian@sebsite.pw>
+pkgname=wiimms-szs-tools
+pkgver=2.26a
+pkgrel=0
+pkgdesc="Set of command-line tools to work with Mario Kart Wii files"
+# releases aren't tagged; this commit matches version 2.26a
+_commit=9ae8841ec4720e74173e2f72fac33f0848bbf435
+url="https://szs.wiimm.de/"
+arch="x86 x86_64"
+license="GPL-2.0-or-later"
+depends="ncurses libpng"
+makedepends="bash binutils gcc libpng-dev linux-headers make ncurses-dev"
+subpackages="$pkgname-doc"
+source="$pkgname-$_commit.tar.gz::https://github.com/Wiimm/wiimms-szs-tools/archive/$_commit.tar.gz
+	$pkgname.patch"
+builddir="$srcdir/$pkgname-$_commit"
+options="!check" # No tests
+
+build() {
+	make -C project INSTALL_PATH="$pkgdir/usr" all doc
+}
+
+package() {
+	make -C project INSTALL_PATH="$pkgdir/usr" install
+	mkdir -p "$pkgdir"/usr/share/doc/szs/
+	install -m644 project/doc/*.txt "$pkgdir"/usr/share/doc/szs/
+}
+
+sha512sums="
+3e4f3555e53012096a64f9d4dba4bae2b4284ca185a2c9e732b022734558bddc6f040ad180d1074906c9fdc91750a37b5883fd902db0da65d816dd46c79c3d1e  wiimms-szs-tools-9ae8841ec4720e74173e2f72fac33f0848bbf435.tar.gz
+dba4f42704d0ecdb4c6e9f03bc48c6e17800e077358cc04c7f453c8fad4fcd4658c473e9dc2acd8484da2efe286c47655a4f689b0ab76b12ca0ce708cfada086  wiimms-szs-tools.patch
+"
