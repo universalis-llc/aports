@@ -47,7 +47,7 @@ troff() {
 	cd "$pkgdir"
 	mkdir -p "$subpkgdir/usr/lib/9base/bin"
 	mv "$pkgdir/usr/lib/9base/bin/troff" "$subpkgdir/usr/lib/9base/bin/troff"
-	mkdir -p "$subpkgdir/usr/lib/9base/lib/troff"
+	mkdir -p "$subpkgdir/usr/lib/9base/lib"
 	mv "$pkgdir/usr/lib/9base/lib/troff" "$subpkgdir/usr/lib/9base/lib/troff"
 }
 
