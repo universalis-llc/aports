@@ -1,0 +1,29 @@
+# Maintainer: Hakan Erduman <hakan@erduman.de>
+pkgname=xfce4-hamster-plugin
+pkgver=1.15
+pkgrel=0
+pkgdesc="A recreation of the gnome-shell hamster extension as a xfce4 panel plugin."
+url="https://github.com/projecthamster/xfce4-hamster-plugin"
+arch="all !mips !mips64"
+license="GPL-2.0-or-later"
+options="!check" # No test suite
+makedepends="cmake libxfce4ui-dev libxfce4util-dev xfce4-panel-dev"
+subpackages="$pkgname-lang"
+source="$pkgname-$pkgver.tar.gz::https://github.com/projecthamster/xfce4-hamster-plugin/archive/refs/tags/v$pkgver.tar.gz"
+
+build() {
+	cmake \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_BUILD_TYPE=None \
+		.
+	make
+}
+
+package() {
+	make install LIBDIR=lib DESTDIR="$pkgdir"
+}
+
+sha512sums="
+ba26bf96d2d344569f0e98a4da7b6a1617d3b9c047e90debc2c84f858318e2e5862c68195899790ae7eaba77ab75c514e25ffa6fb7bf47e3fc70c82c8087f58e  xfce4-hamster-plugin-1.15.tar.gz
+"
