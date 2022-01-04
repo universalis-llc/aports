@@ -81,6 +81,10 @@ package() {
 	install -D -m 644 doc/lua.1 "$pkgdir"/usr/share/man/man1/lua$_luaver.1
 	install -D -m 644 doc/luac.1 "$pkgdir"/usr/share/man/man1/luac$_luaver.1
 
+	mkdir -p "$pkgdir"/usr/share/doc/$pkgname/
+	install -m644 doc/*.html doc/*.css doc/logo.gif doc/osi-certified-72x60.png \
+		"$pkgdir"/usr/share/doc/$pkgname/
+
 	install -Dm644 "$srcdir"/lua5.4.pc -t "$pkgdir"/usr/lib/pkgconfig
 }
 
