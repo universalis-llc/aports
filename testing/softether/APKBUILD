@@ -1,0 +1,109 @@
+# Contributor: bweiss <b.weiss@fastmail.fm>
+# Maintainer: bweiss <b.weiss@fastmail.fm>
+pkgname=softether
+pkgver=4.38
+_buildnumber=9760
+_buildtype=rtm
+pkgrel=0
+pkgdesc="Softether VPN"
+url="http://www.softether.org"
+arch="all"
+license="Apache-2.0"
+depends="readline
+	 openssl
+	 zlib"
+#note- if running a custom kernel, CONFIG_TUN must be set
+makedepends="readline-dev
+	openssl-dev
+	zlib-dev"
+source="https://github.com/SoftEtherVPN/SoftEtherVPN_Stable/releases/download/v$pkgver-$_buildnumber-$_buildtype/softether-src-v$pkgver-$_buildnumber-$_buildtype.tar.gz
+	vpnclient.initd
+	vpnserver.initd
+	vpnbridge.initd"
+builddir="$srcdir/v$pkgver-$_buildnumber"
+options="!check" #no tests are implemented
+subpackages="
+	$pkgname-client
+	$pkgname-server
+	$pkgname-bridge
+	$pkgname-openrc"
+
+prepare() {
+	./configure
+	default_prepare
+}
+
+build() {
+	make
+}
+
+#default make install is inflexible, and installs everything. So not using stock make install.
+#base installs only libraries and management utility- then server, client, or bridge can be installed as desired seperately.
+#these subpackage entries basically duplicate the relevant install sections in the original makefile (which cannot be called independantly)
+
+package() {
+	pkgdesc="$pkgdesc main library and configuration utility"
+	mkdir -p "$pkgdir"/usr/vpncmd
+	mkdir -p "$pkgdir"/usr/bin
+	cp "$builddir"/bin/vpncmd/hamcore.se2 "$pkgdir"/usr/vpncmd/
+	cp "$builddir"/bin/vpncmd/vpncmd "$pkgdir"/usr/vpncmd
+	echo "#!/bin/sh" > "$pkgdir"/usr/bin/vpncmd
+	echo /usr/vpncmd/vpncmd '"$@"' >> "$pkgdir"/usr/bin/vpncmd
+	echo 'exit $?' >> "$pkgdir"/usr/bin/vpncmd
+	chmod 755 "$pkgdir"/usr/bin/vpncmd
+}
+
+client() {
+	pkgdesc="$pkgdesc client"
+	depends="$depends softether"
+	mkdir -p "$subpkgdir"/usr/vpnclient
+	mkdir -p "$subpkgdir"/usr/bin
+	mkdir -p "$pkgdir"/etc/init.d
+	cp "$builddir"/bin/vpnclient/hamcore.se2 "$subpkgdir"/usr/vpnclient/
+	cp "$builddir"/bin/vpnclient/vpnclient "$subpkgdir"/usr/vpnclient
+	echo "#!/bin/sh" > "$subpkgdir"/usr/bin/vpnclient
+	echo /usr/vpnclient/vpnclient '"$@"' >> "$subpkgdir"/usr/bin/vpnclient
+	echo 'exit $?' >> "$subpkgdir"/usr/bin/vpnclient
+	chmod 755 "$subpkgdir"/usr/bin/vpnclient
+	install -Dm755 "$srcdir"/vpnclient.initd "$pkgdir"/etc/init.d/vpnclient
+
+}
+
+server() {
+	pkgdesc="$pkgdesc server"
+	depends="$depends softether"
+	mkdir -p "$subpkgdir"/usr/vpnserver
+	mkdir -p "$subpkgdir"/usr/bin
+	mkdir -p "$pkgdir"/etc/init.d
+	cp "$builddir"/bin/vpnserver/hamcore.se2 "$subpkgdir"/usr/vpnserver/
+	cp "$builddir"/bin/vpnserver/vpnserver "$subpkgdir"/usr/vpnserver
+	echo "#!/bin/sh" > "$subpkgdir"/usr/bin/vpnserver
+	echo /usr/vpnserver/vpnserver '"$@"' >> "$subpkgdir"/usr/bin/vpnserver
+	echo 'exit $?' >> "$subpkgdir"/usr/bin/vpnserver
+	chmod 755 "$subpkgdir"/usr/bin/vpnserver
+	install -Dm755 "$srcdir"/vpnserver.initd "$pkgdir"/etc/init.d/vpnserver
+
+}
+
+bridge() {
+	pkgdesc="$pkgdesc bridge"
+	depends="$depends softether"
+	mkdir -p "$subpkgdir"/usr/vpnbridge
+	mkdir -p "$subpkgdir"/usr/bin
+	mkdir -p "$pkgdir"/etc/init.d
+	cp "$builddir"/bin/vpnbridge/hamcore.se2 "$subpkgdir"/usr/vpnbridge/
+	cp "$builddir"/bin/vpnbridge/vpnbridge "$subpkgdir"/usr/vpnbridge
+	echo "#!/bin/sh" > "$subpkgdir"/usr/bin/vpnbridge
+	echo /usr/vpnbridge/vpnbridge '"$@"' >> "$subpkgdir"/usr/bin/vpnbridge
+	echo 'exit $?' >> "$subpkgdir"/usr/bin/vpnbridge
+	chmod 755 "$subpkgdir"/usr/bin/vpnbridge
+	install -Dm755 "$srcdir"/vpnbridge.initd "$pkgdir"/etc/init.d/vpnbridge
+
+}
+
+sha512sums="
+48be7a4a014f85967bb3beb906a7ff34b51e0828ff4cf9844520815fc83333f453fb71b6924fe62050c3e96cab03266f92465aadb8f2d83bec2addfe9f18c8a8  softether-src-v4.38-9760-rtm.tar.gz
+333b58e1c945fefc25227eba7f5de21ec12e1c12f50ddc9fa0763272c19eb9c4c64239b7e540b7e35808440913e1448be7cf4ed3495624cc9bbf209a5fd6a49f  vpnclient.initd
+d511a56418d46ca75dfb61b73850f70ed161a1129397ef6f68938004bce54540196c8e7e56a1ef8402293b81eac1a54b98220a9b2926e6a1df719d22c47cf1c3  vpnserver.initd
+a52e1d9b535957df3c0abda34d75d367f5d83278009fdad58c43cf71557cd1901039e216dda00b23cc2bbef8de14a33f5cc04d6ab3ac247b9113bf2273dfb1f6  vpnbridge.initd
+"
