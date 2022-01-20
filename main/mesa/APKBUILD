@@ -311,7 +311,7 @@ _vulkan() {
 }
 
 _vulkan_layers() {
-	pkgdesc="collectin of vulkan layers from mesa"
+	pkgdesc="collection of vulkan layers from mesa"
 	depends="python3"
 
 	# Remove this after the release of the next stable (3.14)
