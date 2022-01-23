@@ -4,7 +4,7 @@
 # Maintainer: Michał Polański <michal@polanski.me>
 pkgname=sway
 pkgver=1.7
-pkgrel=0
+pkgrel=1
 pkgdesc="i3 compatible window manager for Wayland"
 url="https://swaywm.org"
 arch="all"
@@ -35,6 +35,7 @@ subpackages="
 	$pkgname-bash-completion
 	$pkgname-zsh-completion
 	$pkgname-fish-completion
+	grimshot::noarch
 	"
 source="$pkgname-$pkgver.tar.gz::https://github.com/swaywm/sway/archive/$pkgver.tar.gz
 	sway.desktop
@@ -51,6 +52,11 @@ package() {
 	install -D -m644 "$srcdir"/sway.desktop \
 		"$pkgdir"/usr/share/wayland-sessions/sway.desktop
 
+	install -D -m755 contrib/grimshot \
+		"$pkgdir"/usr/bin/grimshot
+	install -D -m644 contrib/grimshot.1 \
+		"$pkgdir"/usr/share/man/man1/grimshot.1
+
 	# move fish completion files where they are expected
 	mv "$pkgdir"/usr/share/fish/vendor_completions.d "$pkgdir"/usr/share/fish/completions
 }
@@ -61,6 +67,14 @@ wallpapers() {
 	install_if="$pkgname=$pkgver-r$pkgrel"
 
 	amove usr/share/backgrounds
+}
+
+grimshot() {
+	pkgdesc="A helper for screenshots within Sway"
+	depends="grim jq libnotify slurp sway wl-clipboard"
+
+	mkdir -p "$subpkgdir"/usr/bin/
+	mv "$pkgdir"/usr/bin/grimshot "$subpkgdir"/usr/bin/
 }
 
 sha512sums="
