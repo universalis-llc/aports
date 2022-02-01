@@ -4,12 +4,12 @@
 pkgname=python3-tkinter
 pkgver=3.10.1
 _basever="${pkgver%.*}"
-pkgrel=0
-pkgdesc="A graphical user interface for the Python"
+pkgrel=1
+pkgdesc="A graphical user interface for the Python programming language"
 url="https://wiki.python.org/moin/TkInter"
 arch="all"
 license="PSF-2.0"
-replaces=python3
+replaces="python3"
 subpackages="$pkgname-tests::noarch python3-idle:_idle:noarch"
 makedepends="expat-dev openssl1.1-compat-dev zlib-dev ncurses-dev bzip2-dev xz-dev
 	sqlite-dev libffi-dev tcl-dev linux-headers gdbm-dev readline-dev
@@ -106,8 +106,8 @@ tests() {
 
 _idle() {
 	pkgdesc="IDE for Python3 using Tkinter"
-	depends="$pkgname=$pkgver-r$pkgrel"
-	replaces=python3
+	depends="python3 $pkgname=$pkgver-r$pkgrel"
+	replaces="python3"
 	cd "$pkgdir"
 	_mv_files usr/bin
 	_mv_files usr/lib/python*/idlelib
