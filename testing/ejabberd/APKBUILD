@@ -3,7 +3,7 @@
 # Maintainer: John Regan <john@jrjrtech.com>
 pkgname=ejabberd
 pkgver=21.01
-pkgrel=1
+pkgrel=2
 pkgdesc="An erlang jabber server"
 url="https://www.ejabberd.im/"
 arch="all"
@@ -102,6 +102,7 @@ build() {
 		--localstatedir=/var \
 		--mandir=/usr/share/man \
 		--infodir=/usr/share/info \
+		--enable-user=ejabberd \
 		--enable-all
 	make
 }
