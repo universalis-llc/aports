@@ -1,10 +1,10 @@
 #!/bin/sh
 
 # We need to kill any existing pipewire instance to restore sound
-pkill -u "${USER}" -x pipewire 1>/dev/null 2>&1
 pkill -u "${USER}" -fx "pipewire -c pipewire-pulse.conf" 1>/dev/null 2>&1
 pkill -u "${USER}" -fx /usr/bin/pipewire-media-session 1>/dev/null 2>&1
 pkill -u "${USER}" -fx /usr/bin/wireplumber 1>/dev/null 2>&1
+pkill -u "${USER}" -fx /usr/bin/pipewire 1>/dev/null 2>&1
 
 exec /usr/bin/pipewire &
 
