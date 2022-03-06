@@ -3,7 +3,7 @@
 # Maintainer: Milan P. Stanić <mps@arvanta.net>
 pkgname=iwd
 pkgver=1.25
-pkgrel=0
+pkgrel=1
 pkgdesc="Internet Wireless Daemon"
 url="https://iwd.wiki.kernel.org/"
 arch="all"
@@ -35,7 +35,6 @@ build() {
 		--mandir=/usr/share/man \
 		--localstatedir=/var \
 		--disable-systemd-service \
-		--enable-sim-hardcoded \
 		--enable-wired \
 		--enable-tools
 	make
