@@ -10,7 +10,7 @@ license="MIT"
 depends="cmd:chrpath cmd:strip"
 makedepends="
 	cmake
-	cxxopts-dev
+	cxxopts
 	elfio-dev
 	termcolor-dev
 	"
