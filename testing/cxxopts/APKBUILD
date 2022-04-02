@@ -8,7 +8,6 @@ url="https://github.com/jarro2783/cxxopts"
 arch="noarch"
 license="MIT"
 makedepends="cmake ninja"
-subpackages="$pkgname-dev"
 source="https://github.com/jarro2783/cxxopts/archive/v$pkgver/cxxopts-$pkgver.tar.gz"
 
 build() {
