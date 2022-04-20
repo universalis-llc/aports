@@ -1,8 +1,8 @@
 # Contributor: Gavin Henry <ghenry@sentrypeer.org>
 # Maintainer: Gavin Henry <ghenry@sentrypeer.org>
 pkgname=opendht
-pkgver=2.4.0
-pkgrel=3
+pkgver=2.4.1
+pkgrel=0
 pkgdesc="C++17 Distributed Hash Table implementation"
 url="https://github.com/savoirfairelinux/opendht"
 arch="all"
@@ -64,5 +64,5 @@ _py3() {
 }
 
 sha512sums="
-e7db51f47c5b5254d97c39d67f9b7329c70680bfe5d9f189627332a5fccb3bdf12e420d507dfd5e0fd023109ed5f32d47ccb9c52d0d4bb69cf6178e7e665205a  opendht-2.4.0.tar.gz
+8de2304ac847b6824d80e20a9478c49d117cfd2a70bb43cd51ba73123d23662e65ba9c622c47ad2a4e802e85bbcb238637b167a14cd8678b074d04651bb53ea8  opendht-2.4.1.tar.gz
 "
