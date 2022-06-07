@@ -1,7 +1,7 @@
 # Maintainer: Drew DeVault <sir@cmpwn.com>
 pkgname=harec
-pkgver="0_git20220528"
-_commit=78989a15dfcc301ac2eca07afb1f906e172bd48b
+pkgver="0_git20220607"
+_commit=55bfdda44eb5bbf3e4e2a245cc18367220da8560
 pkgrel=0
 pkgdesc="The Hare compiler"
 url="https://harelang.org"
@@ -27,5 +27,5 @@ package() {
 }
 
 sha512sums="
-b5e8dd564f037cdf528ebf8b573b825a9d4980e282969fefee465aa9efcff3b9f853293079250444376ad3eabd4048d667c1a54d02182cb33f3a815826761b2c  harec-78989a15dfcc301ac2eca07afb1f906e172bd48b.tar.gz
+d31b6c04c607bac75044dbbe4907913af7658a31257afd08e5e8189d8c5038ae3211ef3002a6837c25d8a592fc752791e1e3b5dd713fef6945c744bee87cce11  harec-55bfdda44eb5bbf3e4e2a245cc18367220da8560.tar.gz
 "
